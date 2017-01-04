@@ -16,6 +16,7 @@ public class SelectionSort {
         Scanner in;
 
         in = new Scanner(System.in);
+
         System.out.printf("Number of elements in array: ");
         count = in.nextInt();
         nums = genNumbers(count);
