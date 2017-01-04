@@ -18,9 +18,9 @@ public class SelectionSort {
         System.out.printf("Number of elements in array: ");
         count = in.nextInt();
         nums = genNumbers(count);
-        System.out.println(Arrays.toString(nums));
+        System.out.printf("Initial Array: %s\n", Arrays.toString(nums));
         selectionSort(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.printf("Sorted Array: %s\n", Arrays.toString(nums));
     }
 
     /**
