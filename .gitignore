@@ -1,0 +1,8 @@
+/.idea/
+/src/
+/target/
+*/doc/
+*/.ensime_cache/
+*.iml
+*/src/main/resources
+*/src/test/
