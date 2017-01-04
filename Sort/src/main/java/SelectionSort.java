@@ -1,18 +1,16 @@
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
 /**
  * Generates random numbers and uses the selection sort to sort them.
  *
  * @author Daniel Phan
  * @version 1.4.16
  */
-
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
-
 public class SelectionSort {
     public static void main(String[] args) {
-        int count;
-        int[] nums;
+        int count, nums[];
         Scanner in;
 
         in = new Scanner(System.in);
@@ -33,8 +31,7 @@ public class SelectionSort {
      * (Precondition: count > 0)
      */
     public static int[] genNumbers(int count) {
-        int i, upperBound;
-        int[] nums;
+        int i, upperBound, nums[];
         Random random;
 
         upperBound = 100;
@@ -64,9 +61,9 @@ public class SelectionSort {
                 }
             }
             if (nums[i] != nums[min]) {
-                nums[i] ^= nums[min];
-                nums[min] ^= nums[i];
-                nums[i] ^= nums[min];
+                int temp = nums[i];
+                nums[i] = nums[min];
+                nums[min] = temp;
             }
         }
     }
