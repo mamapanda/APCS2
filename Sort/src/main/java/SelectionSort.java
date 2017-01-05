@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.stream.*;
 
 /**
  * Generates random numbers and uses the selection sort to sort them.
@@ -10,14 +11,15 @@ import java.util.Scanner;
  */
 public class SelectionSort {
     public static void main(String[] args) {
-        int count, nums[];
-        Scanner in;
-
-        in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
 
         System.out.printf("Number of elements in array: ");
-        count = in.nextInt();
-        nums = genNumbers(count);
+        int count = in.nextInt();
+
+        in.close();
+
+        int[] nums = genNumbers(count);
+
         System.out.printf("Initial Array: %s\n", Arrays.toString(nums));
         selectionSort(nums);
         System.out.printf("Sorted Array: %s\n", Arrays.toString(nums));
@@ -31,17 +33,12 @@ public class SelectionSort {
      * (Precondition: count > 0)
      */
     public static int[] genNumbers(int count) {
-        int i, upperBound, nums[];
-        Random random;
+        final int upperBound = 100;
+        Random random = new Random();
 
-        upperBound = 100;
-        nums = new int[count];
-        random = new Random();
-
-        for (i = 0; i < count; i++) {
-            nums[i] = random.nextInt(upperBound);
-        }
-        return nums;
+        return IntStream.range(0, count)
+                .map(n -> random.nextInt(upperBound))
+                .toArray();
     }
 
     /**
@@ -51,17 +48,15 @@ public class SelectionSort {
      * (Precondition: nums contains numbers)
      */
     public static void selectionSort(int[] nums) {
-        int i, j, min, temp;
-
-        for (i = 0; i < nums.length; i++) {
-            min = i;
-            for (j = i; j < nums.length; j++) {
+        for (int i = 0; i < nums.length; i++) {
+            int min = i;
+            for (int j = i; j < nums.length; j++) {
                 if (nums[j] < nums[min]) {
                     min = j;
                 }
             }
             if (nums[i] != nums[min]) {
-                temp = nums[i];
+                int temp = nums[i];
                 nums[i] = nums[min];
                 nums[min] = temp;
             }
