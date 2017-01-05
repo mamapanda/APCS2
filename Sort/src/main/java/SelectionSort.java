@@ -51,7 +51,7 @@ public class SelectionSort {
      * (Precondition: nums contains numbers)
      */
     public static void selectionSort(int[] nums) {
-        int i, j, min;
+        int i, j, min, temp;
 
         for (i = 0; i < nums.length; i++) {
             min = i;
@@ -61,7 +61,7 @@ public class SelectionSort {
                 }
             }
             if (nums[i] != nums[min]) {
-                int temp = nums[i];
+                temp = nums[i];
                 nums[i] = nums[min];
                 nums[min] = temp;
             }
