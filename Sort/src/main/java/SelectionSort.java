@@ -33,11 +33,10 @@ public class SelectionSort {
      * (Precondition: count > 0)
      */
     public static int[] genNumbers(int count) {
-        final int upperBound = 100;
         Random random = new Random();
 
         return IntStream.range(0, count)
-                .map(n -> random.nextInt(upperBound))
+                .map(n -> random.nextInt(100))
                 .toArray();
     }
 
