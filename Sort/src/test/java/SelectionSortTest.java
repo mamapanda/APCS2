@@ -32,7 +32,7 @@ public class SelectionSortTest {
 
         expected = Arrays.stream(input_).sorted().toArray();
 
-        SelectionSort.selectionSort(input_);
+        InsertionSort.insertionSort(input_);
         assertEquals(Arrays.toString(expected), Arrays.toString(input_));
     }
 
