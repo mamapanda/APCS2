@@ -28,6 +28,7 @@ public class SelectionSort {
     /**
      * Generates an array of random numbers.
      * (Postcondition: an array of length count with random numbers is returned)
+     *
      * @param count the number of elements in the array
      * @return an array with random numbers
      * (Precondition: count > 0)
@@ -43,8 +44,9 @@ public class SelectionSort {
     /**
      * Sorts the given array.
      * (Postcondition: nums is changed and sorted)
+     *
      * @param nums the array of numbers to sort
-     * (Precondition: nums contains numbers)
+     *             (Precondition: nums contains numbers)
      */
     public static void selectionSort(int[] nums) {
         for (int i = 0; i < nums.length; i++) {

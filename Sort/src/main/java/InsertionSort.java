@@ -7,10 +7,10 @@ public class InsertionSort {
             int insert = nums[i];
             int insertPoint = i;
             while (insertPoint > 0 && nums[insertPoint - 1] > insert) {
+                int temp = nums[insertPoint];
                 nums[insertPoint] = nums[insertPoint - 1];
-                insertPoint--;
+                nums[--insertPoint] = temp;
             }
-            nums[insertPoint] = insert;
         }
     }
 
