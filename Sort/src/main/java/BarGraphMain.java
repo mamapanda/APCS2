@@ -21,6 +21,7 @@ public class BarGraphMain {
         BarGraphSorter thing = new BarGraphSorter(barCount, frame.getContentPane().getSize());
         frame.setVisible(true);
         frame.add(thing);
+
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

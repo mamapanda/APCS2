@@ -14,7 +14,8 @@ public class BarGraphSorter extends JComponent {
     private int insertPoint_; //the current location of the value to be inserted
     private boolean isSorted_; //whether or not the values are sorted or not
     private final Dimension frameDims_; //the dimensions of the JFrame's content pane
-    private static final int MAX_VALUE = 100; //the upper bound of the random values
+    private static final int LOWER_BOUND = 5; //the inclusive lower bound of the random values
+    private static final int UPPER_BOUND = 100; //the exclusive upper bound of the random values
     private static final int DRAW_DELAY = 25; //the drawing delay in ms
 
     /**
@@ -28,7 +29,7 @@ public class BarGraphSorter extends JComponent {
         Random random = new Random();
         values_ = new int[barCount];
         for (int i = 0; i < barCount; i++) {
-            values_[i] = random.nextInt(MAX_VALUE - 5) + 5;
+            values_[i] = random.nextInt(UPPER_BOUND - LOWER_BOUND) + LOWER_BOUND;
         }
         frameDims_ = frameDims;
         isSorted_ = false;
@@ -53,7 +54,7 @@ public class BarGraphSorter extends JComponent {
                 }
                 int temp = values_[insertPoint_];
                 values_[insertPoint_] = values_[insertPoint_ - 1];
-                values_[--insertPoint_ ] = temp;
+                values_[--insertPoint_] = temp;
                 repaint();
                 try {
                     Thread.sleep(DRAW_DELAY);
@@ -95,7 +96,7 @@ public class BarGraphSorter extends JComponent {
     private Rectangle[] createRectangles() {
         Rectangle[] recs = new Rectangle[values_.length];
         int barW = (int) Math.round(frameDims_.height * 1.0 / values_.length);
-        double scale = frameDims_.width * 1.0 / MAX_VALUE;
+        double scale = frameDims_.width * 1.0 / UPPER_BOUND;
         for (int i = 0; i < values_.length; i++) {
             int barL = (int) (scale * values_[i]);
             recs[i] = new Rectangle(0, barW * i, barL, barW);
