@@ -19,8 +19,13 @@ public class BarGraphMain {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         BarGraphSorter thing = new BarGraphSorter(barCount, frame.getContentPane().getSize());
-        frame.add(thing);
         frame.setVisible(true);
+        frame.add(thing);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         thing.insertionSort();
     }

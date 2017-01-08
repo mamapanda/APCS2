@@ -15,7 +15,7 @@ public class BarGraphSorter extends JComponent {
     private boolean isSorted_; //whether or not the values are sorted or not
     private final Dimension frameDims_; //the dimensions of the JFrame's content pane
     private static final int MAX_VALUE = 100; //the upper bound of the random values
-    private static final int DRAW_DELAY = 50; //the drawing delay in ms
+    private static final int DRAW_DELAY = 25; //the drawing delay in ms
 
     /**
      * Creates a new BarGraphSorter with the given number of values and the frame dimensions
@@ -32,6 +32,7 @@ public class BarGraphSorter extends JComponent {
         }
         frameDims_ = frameDims;
         isSorted_ = false;
+        insertPoint_ = -1;
     }
 
     /**
