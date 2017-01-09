@@ -10,8 +10,8 @@ import java.util.Collection;
  * @author Daniel Phan
  */
 @RunWith(Parameterized.class)
-public class InsertionSortTest {
-    public InsertionSortTest(int[] input, int[] expected) {
+public class MergeSortTest {
+    public MergeSortTest(int[] input, int[] expected) {
         input_ = input;
         expected_ = expected;
     }
@@ -37,8 +37,8 @@ public class InsertionSortTest {
 
     @org.junit.Test
     public void insertionSort() throws Exception {
-        InsertionSort.insertionSort(input_);
-        assertEquals(Arrays.toString(expected_), Arrays.toString(input_));
+        int[] result = MergeSort.mergeSort(input_);
+        assertEquals(Arrays.toString(expected_), Arrays.toString(result));
     }
 
     private int[] input_;

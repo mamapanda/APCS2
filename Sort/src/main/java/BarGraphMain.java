@@ -9,7 +9,7 @@ import java.awt.*;
  */
 public class BarGraphMain {
     public static void main(String[] args) {
-        int barCount = 50;
+        int barCount = 40;
 
         JFrame frame = new JFrame();
         frame.setTitle("Insertion Sort");
