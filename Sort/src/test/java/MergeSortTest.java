@@ -36,9 +36,9 @@ public class MergeSortTest {
     }
 
     @org.junit.Test
-    public void insertionSort() throws Exception {
-        int[] result = MergeSort.mergeSort(input_);
-        assertEquals(Arrays.toString(expected_), Arrays.toString(result));
+    public void mergeSort() throws Exception {
+        input_ = MergeSort.mergeSort(input_);
+        assertEquals(Arrays.toString(expected_), Arrays.toString(input_));
     }
 
     private int[] input_;

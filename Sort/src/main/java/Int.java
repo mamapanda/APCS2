@@ -14,5 +14,10 @@ public class Int {
         n_ = n;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(n_);
+    }
+
     private int n_;
 }
