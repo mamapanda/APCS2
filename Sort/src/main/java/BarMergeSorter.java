@@ -23,8 +23,7 @@ public class BarMergeSorter extends JComponent {
         Random rand = new Random();
         nums_ = IntStream.range(0, barCount)
                 .map(n -> rand.nextInt(VAL_LIMIT - VAL_MIN) + VAL_MIN)
-                .mapToObj(Int::valueOf)
-                .toArray(Int[]::new);
+                .toArray();
         previousState_ = null;
     }
 
@@ -60,7 +59,7 @@ public class BarMergeSorter extends JComponent {
      * (Precondition: nums_ is nonnull.)
      */
     public void run() {
-        mergeSort(nums_);
+        mergeSort(nums_, 0);
     }
 
     /**
@@ -71,39 +70,40 @@ public class BarMergeSorter extends JComponent {
      */
     @Override
     public String toString() {
-        return Arrays.deepToString(nums_);
+        return Arrays.toString(nums_);
     }
 
-    private Int[] previousState_; //the previous state of nums
-    private Int[] nums_; //the array of numbers to sort
+    private int[] previousState_; //the previous state of nums
+    private int[] nums_; //the array of numbers to sort
     private int i1_; //lower index of the merged section to draw
     private int i2_; //upper index of the merged section to draw
     private Dimension frameDims_; //the dimensions of the JFrame
     private static final int VAL_MIN = 5; //the inclusive lower bound of the random values
     private static final int VAL_LIMIT = 100; //the exclusive upper bound of the random values
-    private static final int DRAW_DELAY = 25; //the drawing delay in ms
+    private static final int DRAW_DELAY = 50; //the drawing delay in ms
 
     /**
      * Sorts an array using the merge sort.
      * (Postcondition: A sorted array is returned.)
      * @param nums the array to sort
+     * @param startIndex the index of nums[0] in nums_
      * @return the sorted version of nums
      * (Precondition: nums is nonnull)
      */
-    private Int[] mergeSort(Int[] nums) {
+    private int[] mergeSort(int[] nums, int startIndex) {
         if (nums.length == 1 || nums.length == 0) {
             return nums;
         }
 
-        Int[] a1 = new Int[nums.length / 2];
-        Int[] a2 = new Int[(nums.length + 1) / 2];
+        int[] a1 = new int[nums.length / 2];
+        int[] a2 = new int[(nums.length + 1) / 2];
 
         System.arraycopy(nums, 0, a1, 0, a1.length);
         System.arraycopy(nums, a1.length, a2, 0, a2.length);
 
-        Int[] result = merge(mergeSort(a1), mergeSort(a2));
+        int[] result = merge(mergeSort(a1, startIndex), mergeSort(a2, startIndex + a1.length), startIndex);
 
-        if (nums.length == nums_.length) {
+        if (nums.length == nums_.length) { //the first call
             try {
                 Thread.sleep(DRAW_DELAY);
             } catch (InterruptedException e) {
@@ -119,34 +119,36 @@ public class BarMergeSorter extends JComponent {
     /**
      * Helps mergeSort by performing the merge part of the merge sort
      * (Postcondition: refs1 and refs2 are merged.)
-     * @param refs1 the first array to merge
-     * @param refs2 the second array to merge
+     * @param nums1 the first array to merge
+     * @param nums2 the second array to merge
+     * @param startIndex the index of nums1[0] in nums_
      * @return the merged array
      * (Precondition: refs1 and refs2 are both nonnull)
      */
-    private Int[] merge(Int[] refs1, Int[] refs2) {
-        i1_ = Arrays.asList(nums_).indexOf(refs1[0]);
-        int stopIndex = Arrays.asList(nums_).indexOf(refs2[refs2.length - 1]);
-        previousState_ = Arrays.stream(nums_)
-                .map(n -> Int.valueOf(n.getValue()))
-                .toArray(Int[]::new);
+    private int[] merge(int[] nums1, int[] nums2, int startIndex) {
+        if (previousState_ == null) {
+            previousState_ = new int[nums_.length];
+        }
+        System.arraycopy(nums_, 0, previousState_, 0, nums_.length);
 
-        Int[] result = new Int[refs1.length + refs2.length];
-        System.arraycopy(refs1, 0, result, 0, refs1.length);
-        System.arraycopy(refs2, 0, result, refs1.length, refs2.length);
-
-        int[] nums1 = Arrays.stream(refs1).mapToInt(Int::getValue).toArray();
-        int[] nums2 = Arrays.stream(refs2).mapToInt(Int::getValue).toArray();
+        int[] result = new int[nums1.length + nums2.length];
 
         int i = 0, j = 0, k = 0;
         while (i < nums1.length && j < nums2.length) {
-            result[k++].setValue(nums1[i] < nums2[j] ? nums1[i++] : nums2[j++]);
+            result[k++] = nums1[i] < nums2[j] ? nums1[i++] : nums2[j++];
         }
         while (i < nums1.length) {
-            result[k++].setValue(nums1[i++]);
+            result[k++] = nums1[i++];
         }
         while (j < nums2.length) {
-            result[k++].setValue(nums2[j++]);
+            result[k++] = nums2[j++];
+        }
+
+        i1_ = startIndex;
+        int stopIndex = startIndex + result.length - 1;
+
+        for (i = startIndex; i <= stopIndex; i++) {
+            nums_[i] = result[i - startIndex];
         }
 
         for (i = i1_; i <= stopIndex; i++) {
@@ -168,13 +170,12 @@ public class BarMergeSorter extends JComponent {
      * @return an array of rectangles based on nums_
      * (Precondition: nums is nonnull)
      */
-    private Rectangle[] createRectangles(Int[] nums) {
-        int[] values = Arrays.stream(nums).mapToInt(Int::getValue).toArray();
-        Rectangle[] recs = new Rectangle[values.length];
-        int barW = (int) (frameDims_.height * 1.0 / values.length);
+    private Rectangle[] createRectangles(int[] nums) {
+        Rectangle[] recs = new Rectangle[nums.length];
+        int barW = (int) (frameDims_.height * 1.0 / nums.length);
         double scale = frameDims_.width * 1.0 / VAL_LIMIT;
-        for (int i = 0; i < values.length; i++) {
-            int barL = (int) (scale * values[i]);
+        for (int i = 0; i < nums.length; i++) {
+            int barL = (int) (scale * nums[i]);
             recs[i] = new Rectangle(0, barW * i, barL, barW);
         }
         return recs;
