@@ -104,11 +104,6 @@ public class BarMergeSorter extends JComponent {
         int[] result = merge(mergeSort(a1, startIndex), mergeSort(a2, startIndex + a1.length), startIndex);
 
         if (nums.length == nums_.length) { //the first call
-            try {
-                Thread.sleep(DRAW_DELAY);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             previousState_ = null;
             repaint();
         }
@@ -153,12 +148,12 @@ public class BarMergeSorter extends JComponent {
 
         for (i = i1_; i <= stopIndex; i++) {
             i2_ = i; //fuck paintComponent being async
+            repaint();
             try {
                 Thread.sleep(DRAW_DELAY);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            repaint();
         }
 
         return result;
