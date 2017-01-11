@@ -1,7 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 /**
+ *
+ *
  * @author Daniel Phan
+ *
  */
 public class BarMSortMain {
     public static void main(String[] args) {
