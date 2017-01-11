@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 /**
- *
+ * The main class to run the application
  *
  * @author Daniel Phan
- *
+ * @version 1.10.17
  */
 public class BarMSortMain {
     public static void main(String[] args) {

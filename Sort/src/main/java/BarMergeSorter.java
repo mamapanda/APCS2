@@ -25,6 +25,7 @@ public class BarMergeSorter extends JComponent {
                 .map(n -> rand.nextInt(VAL_LIMIT - VAL_MIN) + VAL_MIN)
                 .mapToObj(Int::valueOf)
                 .toArray(Int[]::new);
+        previousState_ = null;
     }
 
     /**
@@ -36,11 +37,20 @@ public class BarMergeSorter extends JComponent {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        for (Rectangle r : createRectangles()) {
-            g2.setColor(new Color(148, 0, 211));
+        for (Rectangle r : createRectangles(previousState_ == null ? nums_ : previousState_)) {
+            g2.setColor(new Color(148, 0, 211)); //previous is null when added to frame
             g2.fill(r);
             g2.setColor(Color.WHITE);
             g2.draw(r);
+        }
+        if (previousState_ != null) { //aka has next state
+            Rectangle[] recs = createRectangles(nums_);
+            for (int i = i1_; i <= i2_; i++) {
+                g2.setColor(Color.RED);
+                g2.fill(recs[i]);
+                g2.setColor(Color.WHITE);
+                g2.draw(recs[i]);
+            }
         }
     }
 
@@ -64,11 +74,14 @@ public class BarMergeSorter extends JComponent {
         return Arrays.deepToString(nums_);
     }
 
+    private Int[] previousState_; //the previous state of nums
     private Int[] nums_; //the array of numbers to sort
+    private int i1_; //lower index of the merged section to draw
+    private int i2_; //upper index of the merged section to draw
     private Dimension frameDims_; //the dimensions of the JFrame
     private static final int VAL_MIN = 5; //the inclusive lower bound of the random values
     private static final int VAL_LIMIT = 100; //the exclusive upper bound of the random values
-    private static final int DRAW_DELAY = 500; //the drawing delay in ms
+    private static final int DRAW_DELAY = 25; //the drawing delay in ms
 
     /**
      * Sorts an array using the merge sort.
@@ -88,7 +101,19 @@ public class BarMergeSorter extends JComponent {
         System.arraycopy(nums, 0, a1, 0, a1.length);
         System.arraycopy(nums, a1.length, a2, 0, a2.length);
 
-        return merge(mergeSort(a1), mergeSort(a2));
+        Int[] result = merge(mergeSort(a1), mergeSort(a2));
+
+        if (nums.length == nums_.length) {
+            try {
+                Thread.sleep(DRAW_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            previousState_ = null;
+            repaint();
+        }
+
+        return result;
     }
 
     /**
@@ -100,6 +125,12 @@ public class BarMergeSorter extends JComponent {
      * (Precondition: refs1 and refs2 are both nonnull)
      */
     private Int[] merge(Int[] refs1, Int[] refs2) {
+        i1_ = Arrays.asList(nums_).indexOf(refs1[0]);
+        int stopIndex = Arrays.asList(nums_).indexOf(refs2[refs2.length - 1]);
+        previousState_ = Arrays.stream(nums_)
+                .map(n -> Int.valueOf(n.getValue()))
+                .toArray(Int[]::new);
+
         Int[] result = new Int[refs1.length + refs2.length];
         System.arraycopy(refs1, 0, result, 0, refs1.length);
         System.arraycopy(refs2, 0, result, refs1.length, refs2.length);
@@ -118,12 +149,15 @@ public class BarMergeSorter extends JComponent {
             result[k++].setValue(nums2[j++]);
         }
 
-        try {
-            Thread.sleep(DRAW_DELAY);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for (i = i1_; i <= stopIndex; i++) {
+            i2_ = i; //fuck paintComponent being async
+            try {
+                Thread.sleep(DRAW_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            repaint();
         }
-        repaint();
 
         return result;
     }
@@ -132,10 +166,10 @@ public class BarMergeSorter extends JComponent {
      * Creates rectangles based on nums_.
      * (Postcondition: An array of rectangles based on nums_ is returned.)
      * @return an array of rectangles based on nums_
-     * (Precondition: nums_ is nonnull)
+     * (Precondition: nums is nonnull)
      */
-    private Rectangle[] createRectangles() {
-        int[] values = Arrays.stream(nums_).mapToInt(Int::getValue).toArray();
+    private Rectangle[] createRectangles(Int[] nums) {
+        int[] values = Arrays.stream(nums).mapToInt(Int::getValue).toArray();
         Rectangle[] recs = new Rectangle[values.length];
         int barW = (int) (frameDims_.height * 1.0 / values.length);
         double scale = frameDims_.width * 1.0 / VAL_LIMIT;
