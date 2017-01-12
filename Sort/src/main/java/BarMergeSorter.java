@@ -24,7 +24,7 @@ public class BarMergeSorter extends JComponent {
         nums_ = IntStream.range(0, barCount)
                 .map(n -> rand.nextInt(VAL_LIMIT - VAL_MIN) + VAL_MIN)
                 .toArray();
-        previousState_ = null;
+        mergedSection_ = null;
     }
 
     /**
@@ -36,15 +36,15 @@ public class BarMergeSorter extends JComponent {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        for (Rectangle r : createRectangles(previousState_ == null ? nums_ : previousState_)) {
-            g2.setColor(new Color(148, 0, 211)); //previous is null when added to frame
+        for (Rectangle r : createRectangles(nums_, 0)) {
+            g2.setColor(isSorted_ ? Color.GREEN : new Color(148, 0, 211));
             g2.fill(r);
             g2.setColor(Color.WHITE);
             g2.draw(r);
         }
-        if (previousState_ != null) { //aka has next state
-            Rectangle[] recs = createRectangles(nums_);
-            for (int i = i1_; i <= i2_; i++) {
+        if (mergedSection_ != null) { //aka has next state
+            Rectangle[] recs = createRectangles(mergedSection_, mergedOffset_);
+            for (int i = 0; i <= mergedDrawCount_; i++) {
                 g2.setColor(Color.RED);
                 g2.fill(recs[i]);
                 g2.setColor(Color.WHITE);
@@ -73,10 +73,11 @@ public class BarMergeSorter extends JComponent {
         return Arrays.toString(nums_);
     }
 
-    private int[] previousState_; //the previous state of nums
     private int[] nums_; //the array of numbers to sort
-    private int i1_; //lower index of the merged section to draw
-    private int i2_; //upper index of the merged section to draw
+    private int[] mergedSection_; //the section of nums that was just merged
+    private int mergedOffset_; //lower index of the merged section in nums_
+    private int mergedDrawCount_; //the number of rectangles in mergedSection_ to draw
+    private boolean isSorted_; //whether or not the bar graph is sorted
     private Dimension frameDims_; //the dimensions of the JFrame
     private static final int VAL_MIN = 5; //the inclusive lower bound of the random values
     private static final int VAL_LIMIT = 100; //the exclusive upper bound of the random values
@@ -104,7 +105,8 @@ public class BarMergeSorter extends JComponent {
         int[] result = merge(mergeSort(a1, startIndex), mergeSort(a2, startIndex + a1.length), startIndex);
 
         if (nums.length == nums_.length) { //the first call
-            previousState_ = null;
+            mergedSection_ = null;
+            isSorted_ = true;
             repaint();
         }
 
@@ -121,33 +123,23 @@ public class BarMergeSorter extends JComponent {
      * (Precondition: refs1 and refs2 are both nonnull)
      */
     private int[] merge(int[] nums1, int[] nums2, int startIndex) {
-        if (previousState_ == null) {
-            previousState_ = new int[nums_.length];
-        }
-        System.arraycopy(nums_, 0, previousState_, 0, nums_.length);
-
-        int[] result = new int[nums1.length + nums2.length];
+        mergedSection_ = new int[nums1.length + nums2.length];
 
         int i = 0, j = 0, k = 0;
         while (i < nums1.length && j < nums2.length) {
-            result[k++] = nums1[i] < nums2[j] ? nums1[i++] : nums2[j++];
+            mergedSection_[k++] = nums1[i] < nums2[j] ? nums1[i++] : nums2[j++];
         }
         while (i < nums1.length) {
-            result[k++] = nums1[i++];
+            mergedSection_[k++] = nums1[i++];
         }
         while (j < nums2.length) {
-            result[k++] = nums2[j++];
+            mergedSection_[k++] = nums2[j++];
         }
 
-        i1_ = startIndex;
-        int stopIndex = startIndex + result.length - 1;
+        mergedOffset_ = startIndex;
 
-        for (i = startIndex; i <= stopIndex; i++) {
-            nums_[i] = result[i - startIndex];
-        }
-
-        for (i = i1_; i <= stopIndex; i++) {
-            i2_ = i; //fuck paintComponent being async
+        for (i = 0; i < mergedSection_.length; i++) {
+            mergedDrawCount_ = i; //fuck paintComponent being async
             repaint();
             try {
                 Thread.sleep(DRAW_DELAY);
@@ -156,22 +148,26 @@ public class BarMergeSorter extends JComponent {
             }
         }
 
-        return result;
+        System.arraycopy(mergedSection_, 0, nums_, startIndex, mergedSection_.length);
+
+        return mergedSection_;
     }
 
     /**
      * Creates rectangles based on nums_.
-     * (Postcondition: An array of rectangles based on nums_ is returned.)
-     * @return an array of rectangles based on nums_
-     * (Precondition: nums is nonnull)
+     * (Postcondition: An array of rectangles based on nums is returned.)
+     * @param nums the array of values
+     * @param offset the relative offset of the rectangles
+     * @return an array of rectangles based on nums
+     * (Precondition: nums is nonnull and offset is nonnegative)
      */
-    private Rectangle[] createRectangles(int[] nums) {
+    private Rectangle[] createRectangles(int[] nums, int offset) {
         Rectangle[] recs = new Rectangle[nums.length];
-        int barW = (int) (frameDims_.height * 1.0 / nums.length);
+        int barW = frameDims_.height / nums_.length;
         double scale = frameDims_.width * 1.0 / VAL_LIMIT;
         for (int i = 0; i < nums.length; i++) {
             int barL = (int) (scale * nums[i]);
-            recs[i] = new Rectangle(0, barW * i, barL, barW);
+            recs[i] = new Rectangle(0, barW * (i + offset), barL, barW);
         }
         return recs;
     }
