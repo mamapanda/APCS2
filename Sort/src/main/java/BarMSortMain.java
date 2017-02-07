@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class BarMSortMain {
     public static void main(String[] args) {
-        int barCount = 50;
+        int barCount = 100;
 
         JFrame frame = new JFrame();
         frame.setTitle("Merge Sort");

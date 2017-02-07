@@ -8,10 +8,10 @@ public class LinearSearcher extends Searcher {
 
     @Override
     public int search(int n) {
-        int i, visitedCount;
+        int i;
 
-        for (i = 0; nums_[i] < n && i < nums_.length; i++);
-        visitedCount = i + 1;
+        for (i = 0; nums_[i] < n && i < nums_.length - 1; i++);
+        int visitedCount = i + 1;
 
         return (nums_[i] == n ? 1 : -1) * visitedCount;
     }

@@ -5,14 +5,9 @@ import java.util.stream.*;
 
 public class SearcherMain {
     public static void main(String[] args) {
-        Scanner in;
-        Searcher searcher;
-        int searchValue, searchCount;
-        int[] nums;
-
-        in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
         System.out.printf("Number of values to put in the array: ");
-        nums = genNumbers(in.nextInt());
+        int[] nums = genNumbers(in.nextInt());
         in.nextLine();
 
         System.out.printf("Unsorted: %s\n", Arrays.toString(nums));
@@ -20,10 +15,11 @@ public class SearcherMain {
         System.out.printf("Sorted: %s\n", Arrays.toString(nums));
 
         System.out.printf("Number to search for: ");
-        searchValue = in.nextInt();
+        int searchValue = in.nextInt();
         in.nextLine();
 
         System.out.printf("Search type: (1) Linear, (2) Binary: ");
+        Searcher searcher;
         if (in.nextInt() == 1) {
             searcher = new LinearSearcher(nums);
         }
@@ -31,7 +27,7 @@ public class SearcherMain {
             searcher = new BinarySearcher(nums);
         }
 
-        searchCount = searcher.search(searchValue);
+        int searchCount = searcher.search(searchValue);
 
         System.out.printf("The value %d was %s in the above array.\n",
                           searchValue,
@@ -43,9 +39,7 @@ public class SearcherMain {
     private final static int UPPER_BOUND = 100;
 
     private static int[] genNumbers(int count) {
-        Random rand;
-
-        rand = new Random();
+        Random rand = new Random();
         return IntStream.range(0, count)
                 .map(n -> rand.nextInt(UPPER_BOUND - MIN_VALUE) + MIN_VALUE)
                 .toArray();
@@ -66,5 +60,4 @@ public class SearcherMain {
             }
         }
     }
-
 }
