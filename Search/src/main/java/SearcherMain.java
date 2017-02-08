@@ -5,34 +5,43 @@ import java.util.stream.*;
 
 public class SearcherMain {
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        System.out.printf("Number of values to put in the array: ");
-        int[] nums = genNumbers(in.nextInt());
-        in.nextLine();
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            System.out.printf("Number of values to put in the array: ");
+            int[] nums = genNumbers(in.nextInt());
+            in.nextLine();
 
-        System.out.printf("Unsorted: %s\n", Arrays.toString(nums));
-        selectionSort(nums);
-        System.out.printf("Sorted: %s\n", Arrays.toString(nums));
+            System.out.printf("Unsorted: %s\n", Arrays.toString(nums));
+            selectionSort(nums);
+            System.out.printf("Sorted: %s\n", Arrays.toString(nums));
 
-        System.out.printf("Number to search for: ");
-        int searchValue = in.nextInt();
-        in.nextLine();
+            System.out.printf("Number to search for: ");
+            int value = in.nextInt();
+            in.nextLine();
 
-        System.out.printf("Search type: (1) Linear, (2) Binary: ");
-        Searcher searcher;
-        if (in.nextInt() == 1) {
-            searcher = new LinearSearcher(nums);
+            System.out.printf("Search type: (1) Linear, (2) Binary (3) Quit: ");
+            int choice = in.nextInt();
+            Searcher searcher;
+            if (choice == 1) {
+                searcher = new LinearSearcher(nums);
+            } else if (choice == 2) {
+                searcher = new BinarySearcher(nums);
+            } else {
+                break;
+            }
+            System.out.println();
+
+            Tuple<Integer, Integer> result = searcher.search(value);
+
+            if (result.fst < 0) {
+                System.out.printf("%d was NOT FOUND in the array.\n", value);
+            } else {
+                System.out.printf("%d was FOUND in the array at index %d.\n",
+                        value, result.fst);
+            }
+            System.out.printf("Number of cells visited: %d\n", result.snd);
+            System.out.println("\n");
         }
-        else {
-            searcher = new BinarySearcher(nums);
-        }
-
-        int searchCount = searcher.search(searchValue);
-
-        System.out.printf("The value %d was %s in the above array.\n",
-                          searchValue,
-                          searchCount < 0 ? "NOT FOUND" : "FOUND");
-        System.out.printf("Number of cells visited: %d\n", Math.abs(searchCount));
     }
 
     private final static int MIN_VALUE = 1;

@@ -9,7 +9,7 @@ public abstract class Searcher {
         nums_ = nums;
     }
 
-    public abstract int search(int n);
+    public abstract Tuple<Integer, Integer> search(int n);
 
     public int[] getNums() {
         return nums_;

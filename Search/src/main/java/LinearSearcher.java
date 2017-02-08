@@ -7,12 +7,11 @@ public class LinearSearcher extends Searcher {
     }
 
     @Override
-    public int search(int n) {
+    public Tuple<Integer, Integer> search(int n) {
         int i;
 
         for (i = 0; nums_[i] < n && i < nums_.length - 1; i++);
-        int visitedCount = i + 1;
 
-        return (nums_[i] == n ? 1 : -1) * visitedCount;
+        return new Tuple<>((nums_[i] == n ? i : -1), i + 1);
     }
 }
