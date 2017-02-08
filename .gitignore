@@ -1,8 +1,0 @@
-/.idea/
-*.xml
-*.iml
-/*/doc/
-/*/.ensime
-/*/.ensime_cache/
-/*/src/main/resources
-/*/target
