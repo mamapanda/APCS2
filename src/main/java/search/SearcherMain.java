@@ -23,15 +23,13 @@ public class SearcherMain {
             int value = in.nextInt();
             in.nextLine();
 
-            System.out.printf("Search type: (1) Linear, (2) Binary (3) Quit: ");
+            System.out.printf("Search type: (1) Linear, (2) Binary: ");
             int choice = in.nextInt();
             Searcher searcher;
             if (choice == 1) {
                 searcher = new LinearSearcher(nums);
-            } else if (choice == 2) {
-                searcher = new BinarySearcher(nums);
             } else {
-                break;
+                searcher = new BinarySearcher(nums);
             }
             System.out.println();
 
@@ -45,6 +43,11 @@ public class SearcherMain {
             }
             System.out.printf("Number of cells visited: %d\n", result.snd);
             System.out.println("\n");
+
+            System.out.printf("Continue? (y/n): ");
+            if(in.next().equals("n")) {
+                break;
+            }
         }
     }
 
