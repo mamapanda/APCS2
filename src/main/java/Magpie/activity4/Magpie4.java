@@ -1,4 +1,4 @@
-package Magpie.activity4;
+package magpie.activity4;
 
 /**
  * A program to carry on conversations with a human user.
@@ -42,9 +42,9 @@ public class Magpie4 {
         }
 
         // Responses which require transformations
-        else if (findKeyword(statement, "I want to ", 0) >= 0) {
+        else if (findKeyword(statement, "I want to", 0) >= 0) {
             response = transformIWantToStatement(statement);
-        } else if (findKeyword(statement, "I want ", 0) >= 0) {
+        } else if (findKeyword(statement, "I want", 0) >= 0) {
             response = transformIWantStatement(statement);
         } else {
             // Look for a two word (you <something> me)
@@ -70,10 +70,17 @@ public class Magpie4 {
         return response;
     }
 
+    /**
+     * Take a statement with "I want <something>." and transform it into
+     * "Would you really be happy if you had <something>?"
+     *
+     * @param statement the user statement, assumed to contain "I want to"
+     * @return the transformed statement
+     */
     private String transformIWantStatement(String statement) {
         String want = statement.trim().substring("I want ".length());
         if (want.charAt(want.length() - 1) == '.') {
-            want = want.substring(0, want.length() - 2);
+            want = want.substring(0, want.length() - 1);
         }
         return String.format("Would you really be happy if you had %s ?", want);
     }
@@ -124,6 +131,13 @@ public class Magpie4 {
         return "What makes you think that I " + restOfStatement + " you?";
     }
 
+    /**
+     * Take a statement with "I <something> you" and transform it into
+     * "Why do you <something> me?"
+     *
+     * @param statement the user statement, assumed to contain "you" followed by "me"
+     * @return the transformed statement
+     */
     private String transformIYouStatement(String statement) {
         //  Remove the final period, if there is one
         statement = statement.trim();
@@ -137,7 +151,7 @@ public class Magpie4 {
         int psnOfYou = findKeyword(statement, "i", 0);
         int psnOfMe = findKeyword(statement, "you", psnOfYou + 1);
 
-        String restOfStatement = statement.substring(psnOfYou + 3, psnOfMe).trim();
+        String restOfStatement = statement.substring(psnOfYou + 1, psnOfMe).trim();
         return "Why do you " + restOfStatement + " me?";
     }
 

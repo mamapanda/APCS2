@@ -1,9 +1,9 @@
-package Magpie.activity3;
+package magpie.activity3;
 
 import java.util.Scanner;
 
 /**
- * A simple class to run the Magpie class.
+ * A simple class to run the magpie class.
  * @author Laurie White
  * @version April 2012
  */
@@ -11,7 +11,7 @@ public class MagpieRunner3
 {
 
 	/**
-	 * Create a Magpie, give it user input, and print its replies.
+	 * Create a magpie, give it user input, and print its replies.
 	 */
 	public static void main(String[] args)
 	{

@@ -1,4 +1,4 @@
-package Magpie.activity3;
+package magpie.activity3;
 
 /**
  * A program to allow students to try out different

@@ -1,4 +1,4 @@
-package Magpie.activity2;
+package magpie.activity2;
 
 /**
  * A program to carry on conversations with a human user.
@@ -31,7 +31,7 @@ public class Magpie2 {
      */
     public String getResponse(String statement) {
         String response = "";
-        if (statement.isEmpty()) {
+        if (statement.trim().isEmpty()) {
             response = "Say something please.";
         } else if (statement.contains("college")) {
             response = "Please don't talk to me about college.";
@@ -40,7 +40,7 @@ public class Magpie2 {
         } else if (statement.contains("life")) {
             response = "What is the meaning of life?";
         } else if (statement.contains("Mr. Luc")) {
-            response = "He sounds like a good teacher.";
+            response = "Mr. Luc sounds like a good teacher.";
         } else if (statement.contains("cat") || statement.contains("dog")) {
             response = "Tell me more about your pets.";
         } else if (statement.contains("no")) {

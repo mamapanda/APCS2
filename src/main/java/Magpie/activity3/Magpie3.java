@@ -1,4 +1,4 @@
-package Magpie.activity3;
+package magpie.activity3;
 
 /**
  * A program to carry on conversations with a human user.
@@ -28,12 +28,14 @@ public class Magpie3 {
      */
     public String getResponse(String statement) {
         String response = "";
-        if (statement.isEmpty()) {
+        if (statement.trim().isEmpty()) {
             response = "Say something please.";
         } else if (findKeyword(statement, "college") >= 0) {
             response = "Please don't talk to me about college.";
         } else if (findKeyword(statement, "Darian") >= 0) {
             response = "Darian is a genius.";
+        } else if (findKeyword(statement, "life") >= 0) {
+            response = "What is the meaning of life?";
         } else if (findKeyword(statement, "Mr. Luc") >= 0) {
             response = "He sounds like a good teacher.";
         } else if (findKeyword(statement, "cat") >= 0 || findKeyword(statement, "dog") >= 0) {
